@@ -1,6 +1,8 @@
 import pygame
 import pyBaba
+import os
 
+os.chdir(os.path.dirname(os.path.abspath(__file__))) #파일 디렉토리를 현재 path으로 설정해준다.
 
 class MapSprite(pygame.sprite.Sprite):
     def __init__(self, image, x, y, is_icon):

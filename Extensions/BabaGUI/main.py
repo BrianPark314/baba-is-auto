@@ -3,6 +3,12 @@ import pyBaba
 import config
 import sys
 import sprites
+import os
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+(width, height) = (600, 400)
+screen = pygame.display.set_mode((width, height))
 
 icon_images = {pyBaba.ObjectType.ICON_BABA: 'BABA',
                pyBaba.ObjectType.ICON_FLAG: 'FLAG',
@@ -78,6 +84,7 @@ if __name__ == '__main__':
     action_dic = {"Direction.UP": pyBaba.Direction.UP, "Direction.DOWN": pyBaba.Direction.DOWN,
                   "Direction.LEFT": pyBaba.Direction.LEFT, "Direction.RIGHT": pyBaba.Direction.RIGHT, "Direction.NONE": pyBaba.Direction.NONE}
     action_file = open("./action.txt", 'r')
+    #with open(os.path.join(sys.path[0], "action.txt"), "r") as action_file:
     actions = action_file.read().splitlines()
     action_file.close()
 
