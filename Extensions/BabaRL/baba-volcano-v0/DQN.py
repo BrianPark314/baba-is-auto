@@ -9,10 +9,17 @@ import numpy as np
 import gym
 import environment  # lgtm[py/unused-import]
 import pyBaba
-
+import os
+import gc
 from tensorboardX import SummaryWriter
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+gc.collect()
+device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
+print (f"PyTorch version:{torch.__version__}") # 1.12.1 이상
+print(f"MPS device built: {torch.backends.mps.is_built()}") # True 여야 합니다.
+print(f"MPS device available: {torch.backends.mps.is_available()}") # True 여야 합니
 env = gym.make('baba-volcano-v0')
 
 Transition = namedtuple(

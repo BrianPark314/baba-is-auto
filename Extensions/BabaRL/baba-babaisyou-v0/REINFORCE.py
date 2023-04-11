@@ -20,6 +20,7 @@ print(f"MPS device available: {torch.backends.mps.is_available()}") # True ì—¬ì•
 
 env = gym.make('baba-babaisyou-v0')
 
+
 class Network(nn.Module):
     def __init__(self):
         super(Network, self).__init__()
@@ -59,8 +60,8 @@ def get_action(state):
 
     m = Categorical(policy)
     action = m.sample()
-
-    net.log_probs.append(m.log_prob(action))
+    print(policy, action)
+    #net.log_probs.append(m.log_prob(action))
     return env.action_space[action.item()]
 
 

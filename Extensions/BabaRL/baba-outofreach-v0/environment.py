@@ -13,7 +13,7 @@ class BabaEnv(gym.Env):
     def __init__(self, enable_render=True):
         super(BabaEnv, self).__init__()
 
-        self.path = '../../../Resources/Maps/out_of_reach.txt'
+        self.path = '../../../Resources/Maps/out_of_reach_bug.txt'
         self.game = pyBaba.Game(self.path)
         self.renderer = rendering.Renderer(self.game)
 

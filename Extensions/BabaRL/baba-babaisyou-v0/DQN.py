@@ -10,13 +10,17 @@ import gym
 import environment  # lgtm[py/unused-import]
 import pyBaba
 import os
+import gc
 
 from tensorboardX import SummaryWriter
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+gc.collect()
+device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
+print (f"PyTorch version:{torch.__version__}") # 1.12.1 이상
+print(f"MPS device built: {torch.backends.mps.is_built()}") # True 여야 합니다.
+print(f"MPS device available: {torch.backends.mps.is_available()}") # True 여야 합니다.
 env = gym.make('baba-babaisyou-v0')
 
 Transition = namedtuple(
@@ -46,15 +50,15 @@ class ReplayMemory:
 class Network(nn.Module):
     def __init__(self):
         super(Network, self).__init__()
-
+        self.netsize=128
         self.conv1 = nn.Conv2d(pyBaba.Preprocess.TENSOR_DIM,
-                               64, 3, padding=1, bias=False)
-        self.bn1 = nn.BatchNorm2d(64)
-        self.conv2 = nn.Conv2d(64, 64, 3, padding=1, bias=False)
-        self.bn2 = nn.BatchNorm2d(64)
-        self.conv3 = nn.Conv2d(64, 64, 3, padding=1, bias=False)
-        self.bn3 = nn.BatchNorm2d(64)
-        self.conv4 = nn.Conv2d(64, 1, 1, padding=0, bias=False)
+                               self.netsize, 3, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(self.netsize)
+        self.conv2 = nn.Conv2d(self.netsize, self.netsize, 3, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(self.netsize)
+        self.conv3 = nn.Conv2d(self.netsize, self.netsize, 3, padding=1, bias=False)
+        self.bn3 = nn.BatchNorm2d(self.netsize)
+        self.conv4 = nn.Conv2d(self.netsize, 1, 1, padding=0, bias=False)
         self.bn4 = nn.BatchNorm2d(1)
 
         self.fc = nn.Linear(99, 4)
@@ -145,9 +149,10 @@ if __name__ == '__main__':
 
         state = env.reset().reshape(1, -1, 9, 11)
         state = torch.tensor(state).to(device)
-
+        env.reset()
         step = 0
         while step < 200:
+
             global_step += 1
 
             action = get_action(state)
