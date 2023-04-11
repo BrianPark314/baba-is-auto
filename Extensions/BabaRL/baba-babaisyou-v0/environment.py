@@ -2,6 +2,7 @@ import gym
 from gym.utils import seeding
 from gym.envs.registration import register
 import numpy as np
+from gym import spaces
 
 import pyBaba
 import rendering
@@ -23,7 +24,7 @@ class BabaEnv(gym.Env):
             pyBaba.Direction.LEFT,
             pyBaba.Direction.RIGHT
         ]
-
+    
         self.action_size = len(self.action_space)
 
         self.seed()

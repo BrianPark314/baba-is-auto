@@ -35,7 +35,7 @@ text_images = {pyBaba.ObjectType.BABA: 'BABA',
                pyBaba.ObjectType.SKULL: 'SKULL',
                pyBaba.ObjectType.DEFEAT: 'DEFEAT'}
 
-game = pyBaba.Game("../../Resources/Maps/simple_map.txt")
+game = pyBaba.Game("../../Resources/Maps/volcano.txt")
 screen_size = (game.GetMap().GetWidth() * config.BLOCK_SIZE,
                game.GetMap().GetHeight() * config.BLOCK_SIZE)
 screen = pygame.display.set_mode( #screen size settings

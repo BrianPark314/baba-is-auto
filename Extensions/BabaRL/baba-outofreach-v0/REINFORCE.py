@@ -8,8 +8,10 @@ import copy
 import gym
 import environment  # lgtm[py/unused-import]
 import pyBaba
-
+import os
 from tensorboardX import SummaryWriter
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 env = gym.make('baba-outofreach-v0')
