@@ -35,7 +35,7 @@ text_images = {pyBaba.ObjectType.BABA: 'BABA',
                pyBaba.ObjectType.SKULL: 'SKULL',
                pyBaba.ObjectType.DEFEAT: 'DEFEAT'}
 
-game = pyBaba.Game("../../Resources/Maps/off_limits_bug.txt")
+game = pyBaba.Game("../../Resources/Maps/simple_map.txt")
 screen_size = (game.GetMap().GetWidth() * config.BLOCK_SIZE,
                game.GetMap().GetHeight() * config.BLOCK_SIZE)
 screen = pygame.display.set_mode( #screen size settings
@@ -81,13 +81,16 @@ if __name__ == '__main__':
     (width, height) = (600*size_modifier, 400*size_modifier)
     screen = pygame.display.set_mode((width, height))"""
 
+    #rescale game
+    #screen.blit(sprite, [5, 5])
+    resolution = (screen_size[0], screen_size[1])
+    surf = pygame.transform.scale2x(screen)
+    _screen = pygame.display.set_mode(resolution)
+    _screen.blit(surf, [0,0])
+    pygame.display.flip()
 
     action_dic = {"Direction.UP": pyBaba.Direction.UP, "Direction.DOWN": pyBaba.Direction.DOWN,
                   "Direction.LEFT": pyBaba.Direction.LEFT, "Direction.RIGHT": pyBaba.Direction.RIGHT, "Direction.NONE": pyBaba.Direction.NONE}
-    action_file = open("./action.txt", 'r')
-    #with open(os.path.join(sys.path[0], "action.txt"), "r") as action_file:
-    actions = action_file.read().splitlines()
-    action_file.close()
 
     clock = pygame.time.Clock()
 
@@ -113,17 +116,17 @@ if __name__ == '__main__':
             continue
 
         for event in pygame.event.get():
-            if event.type == pygame.USEREVENT:
-                if time_step < len(actions):
-                    game.MovePlayer(action_dic[actions[time_step]])
-                    time_step += 1
-                else:
-                    pass
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
+            pressed = pygame.key.get_pressed()
+            if pressed[pygame.K_UP]: game.MovePlayer(action_dic['Direction.UP'])
+            if pressed[pygame.K_DOWN]: game.MovePlayer(action_dic['Direction.DOWN'])
+            if pressed[pygame.K_LEFT]: game.MovePlayer(action_dic['Direction.LEFT'])
+            if pressed[pygame.K_RIGHT]: game.MovePlayer(action_dic['Direction.RIGHT'])
 
+  
         if game.GetPlayState() == pyBaba.PlayState.WON or game.GetPlayState() == pyBaba.PlayState.LOST:
             game_over = True
 
