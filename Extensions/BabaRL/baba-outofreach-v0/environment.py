@@ -13,7 +13,7 @@ class BabaEnv(gym.Env):
     def __init__(self, enable_render=True):
         super(BabaEnv, self).__init__()
 
-        self.path = '../../../Resources/Maps/out_of_reach_bug.txt'
+        self.path = '../../../Resources/Maps/out_of_reach.txt'
         self.game = pyBaba.Game(self.path)
         self.renderer = rendering.Renderer(self.game)
 
@@ -52,7 +52,7 @@ class BabaEnv(gym.Env):
             self.done = True
             reward = 200
         else:
-            reward = -0.5
+            reward = -2
 
         return self.get_obs(), reward, self.done, {}
 

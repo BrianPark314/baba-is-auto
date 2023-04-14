@@ -9,11 +9,14 @@ import gym
 import environment  # lgtm[py/unused-import]
 import pyBaba
 import os
+import gc
 from tensorboardX import SummaryWriter
 
+gc.collect()
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
+#device = torch.device('mps:0' if torch.backends.mps.is_available() else 'cpu')
+device = torch.device('cpu')
 print (f"PyTorch version:{torch.__version__}") # 1.12.1 이상
 print(f"MPS device built: {torch.backends.mps.is_built()}") # True 여야 합니다.
 print(f"MPS device available: {torch.backends.mps.is_available()}") # True 여야 합니다.
@@ -50,7 +53,7 @@ class Network(nn.Module):
 
 net = Network().to(device)
 
-opt = optim.Adam(net.parameters(), lr=1e-3)
+opt = optim.Adam(net.parameters(), lr=1e-4)
 
 
 def get_action(state):
@@ -60,9 +63,10 @@ def get_action(state):
 
     m = Categorical(policy)
     action = m.sample()
-    print(policy, action)
-    #net.log_probs.append(m.log_prob(action))
+
+    net.log_probs.append(m.log_prob(action))
     return env.action_space[action.item()]
+
 
 
 def train():
@@ -76,7 +80,7 @@ def train():
         returns.insert(0, R)
 
     returns = torch.tensor(returns)
-    returns = (returns - returns.mean()) / (returns.std() + 1e-5)
+    returns = (returns - returns.mean()) / (returns.std() + 1e-3)
 
     for prob, R in zip(net.log_probs, returns):
         loss.append(-prob * R)
@@ -97,7 +101,7 @@ if __name__ == '__main__':
 
     global_step = 0
 
-    for e in range(10000):
+    for e in range(1000):
         score = 0
 
         state = env.reset().reshape(1, -1, 9, 11)
